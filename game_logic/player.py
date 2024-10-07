@@ -237,7 +237,7 @@ class Greedy2BotPlayer(Player):
         ]
 
 
-class MinimaxAlphaBetaPlayer(Player):
+class MinimaxAlphaBetaBotPlayer(Player):
     def __init__(self, playerCount: int, depth=3, time_limit=5):
         super().__init__(playerCount)
         self.depth = depth
