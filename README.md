@@ -34,7 +34,7 @@ The game ends when a player successfully moves all of their pieces to the opposi
 | **Greedy 2nd AI**              | Always moves and jumps throught the maximum distance. | 🤑🤑    |
 | **Minimax with AB Pruning AI** | Uses Minimax algorithm with Alpha-Beta Pruning.       | 🧠      |
 
-> ![WARNING]
+> [!WARNING]
 > The Minimax with AB Pruning AI is not recommended for 3 or more players because it worst performance.
 
 ## 🚀 Technologies
