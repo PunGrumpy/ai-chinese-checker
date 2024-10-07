@@ -22,6 +22,21 @@ The game ends when a player successfully moves all of their pieces to the opposi
 - The game ends when a player moves all their pieces to the opposite point.
 - The player who moves all their pieces first wins.
 
+## 🤖 AI Features
+
+[Find our AI algorithms here](./bots)
+
+| Name                           | Description                                           | Emotion |
+| ------------------------------ | ----------------------------------------------------- | ------- |
+| **Random AI**                  | Moves a random piece to a random adjacent space.      | 🎲      |
+| **Greedy Random AI**           | Moves a random piece to the best adjacent space.      | 🎲🤑    |
+| **Greedy 1st AI**              | Always moves the topmost piece to the best space.     | 🤑      |
+| **Greedy 2nd AI**              | Always moves and jumps throught the maximum distance. | 🤑🤑    |
+| **Minimax with AB Pruning AI** | Uses Minimax algorithm with Alpha-Beta Pruning.       | 🧠      |
+
+> ![WARNING]
+> The Minimax with AB Pruning AI is not recommended for 3 or more players because it worst performance.
+
 ## 🚀 Technologies
 
 - [🐍 Python](https://www.python.org/) - Programming language.
