@@ -368,17 +368,16 @@ class MinimaxAlphaBetaPlayer(Player):
         moves = g.allMovesDict(self.playerNum)
         start = random.choice(list(moves.keys()))
         end = random.choice(moves[start])
-        return subj_to_obj_coor(start, self.playerNum, self.playerCount), subj_to_obj_coor(
-            end, self.playerNum, self.playerCount)
+        return subj_to_obj_coor(
+            start, self.playerNum, self.playerCount
+        ), subj_to_obj_coor(end, self.playerNum, self.playerCount)
 
 
 class HumanPlayer(Player):
     def __init__(self, playerCount: int):
         super().__init__(playerCount)
 
-    def pickMove(
-        self, g: Game, window: pygame.Surface, highlight=None
-    ):
+    def pickMove(self, g: Game, window: pygame.Surface, highlight=None):
         pieceSet: set[Piece] = g.pieces[self.playerNum]
         validmoves = []
         clicking = False
@@ -412,27 +411,28 @@ class HumanPlayer(Player):
                     g.lineWidth + 2,
                 )
 
-
-            button_image = pygame.image.load("images/normal_home.png" 
-                                             if not mouse_hover_home  else "images/hover_home.png").convert_alpha()
-            button_image = pygame.transform.scale(button_image, (100, 100)) 
+            button_image = pygame.image.load(
+                "images/normal_home.png"
+                if not mouse_hover_home
+                else "images/hover_home.png"
+            ).convert_alpha()
+            button_image = pygame.transform.scale(button_image, (100, 100))
             tutorial_button_rect = button_image.get_rect()
             tutorial_button_rect.topleft = (1800, 10)  # กำหนดตำแหน่งที่ต้องการ
             window.blit(button_image, tutorial_button_rect)
 
             if tutorial_button_rect.collidepoint(mouse_pos):
                 mouse_hover_home = True  # เมาส์ hover อยู่บนปุ่ม
-                if  clicking:
+                if clicking:
                     return (False, False)
             else:
                 mouse_hover_home = False  # เมาส์ไม่ได้ hover อยู่บนปุ่ม
-
 
             for piece in pieceSet:
                 coor = (
                     # obj_to_subj_coor(piece.getCoor(), self.playerNum, 2)
                     # if humanPlayerNum != 0
-                    # else 
+                    # else
                     piece.getCoor()
                 )
                 absCoor = abs_coors(g.centerCoor, coor, g.unitLength)
@@ -443,7 +443,12 @@ class HumanPlayer(Player):
                     # change the piece's color
                     pygame.draw.circle(
                         window,
-                        brighten_color(PLAYER_COLORS[get_player_zone(piece.getPlayerNum(),self.playerCount)], 0.75),
+                        brighten_color(
+                            PLAYER_COLORS[
+                                get_player_zone(piece.getPlayerNum(), self.playerCount)
+                            ],
+                            0.75,
+                        ),
                         absCoor,
                         g.circleRadius - 2,
                     )
@@ -456,7 +461,9 @@ class HumanPlayer(Player):
                     # draw a circle of the original color
                     pygame.draw.circle(
                         window,
-                        PLAYER_COLORS[get_player_zone(piece.getPlayerNum(),self.playerCount)],
+                        PLAYER_COLORS[
+                            get_player_zone(piece.getPlayerNum(), self.playerCount)
+                        ],
                         absCoor,
                         g.circleRadius - 2,
                     )
@@ -465,9 +472,7 @@ class HumanPlayer(Player):
                 # you will move that piece to the destination
                 if selected_piece_coor == piece.getCoor() and validmoves != []:
                     for d in validmoves:
-                        destCoor = (
-                            abs_coors(g.centerCoor, d, g.unitLength)
-                        )
+                        destCoor = abs_coors(g.centerCoor, d, g.unitLength)
                         if math.dist(mouse_pos, destCoor) <= g.circleRadius:
                             if clicking:
                                 return [selected_piece_coor, d]
@@ -499,7 +504,9 @@ class HumanPlayer(Player):
                         g.lineWidth + 1,
                     )
                     # draw semi-transparent circles around all coordinates in getValidMoves()
-                    validmoves = g.getValidMoves(selected_piece_coor, self.playerNum, self.playerCount)
+                    validmoves = g.getValidMoves(
+                        selected_piece_coor, self.playerNum, self.playerCount
+                    )
                 for c in validmoves:
                     pygame.draw.circle(
                         window,
