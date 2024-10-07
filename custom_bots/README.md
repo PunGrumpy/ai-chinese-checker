@@ -1,61 +1,67 @@
-# Custom Bot Guide
+# 🤖 Custom Bot Guide for Chinese Checkers
 
-Do you think the default bots are easy to beat? They probably are -- because all of them are either based on a randomizer or crude implementations of the [greedy algorithm](https://en.wikipedia.org/wiki/Greedy_algorithm). Instead of only playing with those easy bots, you may create your own ones, and let them fight against bots or against yourself.
+Do you think the default bots are too easy to beat? 🎯 You can create your own bots to challenge them or even battle against yourself! Here's how you can get started.
 
-To start, first make a copy of `CustomBotTemplate.py` and save it under the same folder (`custom_bots`). Rename the filename and class name as you wish, but it is a good practice to make the filename the same as the class name. Now that you have a template to start with, you may explore how to make a bot play the game with the information below.
+## 📁 Getting Started
 
-## Coordinate System
+1. **Copy the template**: First, make a copy of `CustomBotTemplate.py` and save it in the same folder (`custom_bots`).
+2. **Rename the bot**: Rename the filename and class name to something meaningful. It's a good practice to make the filename match the class name.
 
-Big thanks to [Red Blob Games](https://www.redblobgames.com/grids/hexagons/) for the hexagonal grid guide!
+Now you're ready to explore how to make your bot smarter!
 
-The board of Chinese Checkers is a hexagonal grid. There are three axes and six directions. However, we can define it under a two-dimensional coordinate system similar to the Cartesian, using only two parameters to describe each unique square. The third axis can be calculated from the first two.
+## 📐 Coordinate System
 
-In this project, the direction to the right is defined as the x-axis, and the direction to the top right as the y-axis. Thus, the direction to the top left is the (-x+y) axis. The spot where the axes meet is defined as `(0, 0)`. The axes are drawn on the game board like so:
+Thanks to [Red Blob Games](https://www.redblobgames.com/grids/hexagons/) for the hexagonal grid guide!
 
-<img src="https://github.com/henrychess/pygame-chinese-checkers/blob/main/images/coor2.png" width=500>
+In Chinese Checkers, the board is a hexagonal grid with three axes and six directions. However, we simplify this to a 2D coordinate system. The axes are drawn on the game board like this:
 
-Here's a more concise cheat sheet for the six unit vectors:
+![Coordinate System 2](/images/coor2.png)
 
-<img src="https://github.com/henrychess/pygame-chinese-checkers/blob/main/images/coor1.png" width=300>
+Here’s a quick cheat sheet for the six directions:
 
-And here's an image containing all coordinates on the board:
+![Coordinate System 1](/images/coor1.png)
 
-<img src="https://github.com/henrychess/pygame-chinese-checkers/blob/main/images/all_coors.jpg" width=800>
+And here are all the coordinates on the board:
 
-The coordinates and vectors are represented internally as `tuple(int, int)`. If you want to do calculations to the coordinates, use the following functions. They all return a `tuple(int, int)`. They are imported from `game_logic.helpers` (already done that in the template).
+![All Coordinates](/images/all_coors.jpg)
 
-| Function            | Explanation                                                                      |
-| ------------------- | -------------------------------------------------------------------------------- |
-| `add(tuple, tuple)` | Add up the vectors. For example, `add((1,3),(5,7))` returns `(6,10)`.            |
-| `mult(tuple, int)`  | Multiply the vector by an integer. For example, `mult((1,2),4)` returns `(4,8)`. |
+Coordinates are stored as `tuple(int, int)` in the code. You can manipulate them using the following functions from `game_logic.helpers`:
 
-The coordinates you play with inside `pickMove()` are all "subjective" coordinates, i.e. they look the same no matter which side you are actually on. The direction to the right is always `(1,0)` to your bot, even though it may actually be something like `(0,-1)` to the game board. To return the move your bot makes, do this:
+| ⚙️ Function         | 📜 Description                                   |
+| ------------------- | ------------------------------------------------ |
+| `add(tuple, tuple)` | Adds two coordinates together.                   |
+| `mult(tuple, int)`  | Multiplies a coordinate by an integer (scaling). |
+
+To move your bot, you return a pair of start and end coordinates like this:
 
 ```py
-# start and end are the coordinates. If you prefer other variable names, change the names below accordingly.
 return [subj_to_obj_coor(start, self.playerNum), subj_to_obj_coor(end, self.playerNum)]
 ```
 
-## Functions
+## 🛠️ Useful Functions
 
-The following three functions from `game_logic.game` grab stuff that may be helpful for your bot to choose a move.
+Here are some helpful functions from `game_logic.game` to assist in creating your bot’s logic:
 
-| Function              | Data Type                                   | Explanation                                                                                                                                                                                               |
-| --------------------- | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `allMovesDict()`      | `dict(tuple(int,int):list(tuple(int,int)))` | Returns a dictionary with the coordinates of each piece as key, and the valid destination coordinates a piece can go to as value.                                                                         |
-| `getBoardState()`     | `dict(tuple(int,int):int)`                  | Returns the board state in dictionary form: the key is each coordinate on the board, and the value is either 0, 1, 2, or 3: 0 means the spot is vacant, otherwise it's the occupying piece's `playerNum`. |
-| `getBoolBoardState()` | `dict(tuple(int,int):bool)`                 | Similar to `getBoardState()`. However, it only uses `False` and `True` as value. `False` means the spot is vacant, and `True` means it is occupied.                                                       |
+| 🛠️ Function           | 📊 Data Type                                | 📜 Description                                                                                                |
+| --------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `allMovesDict()`      | `dict(tuple(int,int):list(tuple(int,int)))` | Returns all valid moves for your pieces. Key: piece coordinate, Value: list of valid destination coordinates. |
+| `getBoardState()`     | `dict(tuple(int,int):int)`                  | Returns the board state. Key: coordinates, Value: player number or 0 (vacant).                                |
+| `getBoolBoardState()` | `dict(tuple(int,int):bool)`                 | Similar to `getBoardState()`, but with `True` (occupied) and `False` (vacant).                                |
 
-When you return the coordinates, remember to run the coordinates through `subj_to_obj_coor()`, like in the example in `CustomBotTemplate.py`.
+Remember to convert the coordinates using `subj_to_obj_coor()` when returning a move, as shown in the template.
 
-## Constants
+## 🔢 Constants
 
-There are a few useful constants, or literals, from `game_logic.literals`.
+Here are some constants from `game_logic.literals` that you might find useful:
 
-| Constant       | Data Type                       | Explanation                                                                                                       |
-| -------------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `START_COOR`   | `dict(int:set(tuple(int,int)))` | The key is the `playerNum` of each player (1, 2, 3). The value is a `set` of coordinates of the starting squares. |
-| `END_COOR`     | `dict(int:set(tuple(int,int)))` | Similar to `START_COOR`, but the value is a `set` of coordinates of the ending (destination) squares.             |
-| `NEUTRAL_COOR` | `set(tuple(int,int))`           | A `set` of coordinates of the neutral zone.                                                                       |
-| `ALL_COOR`     | `set(tuple(int,int))`           | A `set` of all coordinates on the board.                                                                          |
-| `DIRECTIONS`   | `set(tuple(int,int))`           | A `set` of unit vectors of all six directions. Namely, `{(1,0),(0,1),(-1,1),(-1,0),(0,-1),(1,-1)}`.               |
+| 🔢 Constant    | 📊 Data Type                    | 📜 Description                                                                                      |
+| -------------- | ------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `START_COOR`   | `dict(int:set(tuple(int,int)))` | Starting coordinates for each player. Key: `playerNum`, Value: set of starting positions.           |
+| `END_COOR`     | `dict(int:set(tuple(int,int)))` | End (goal) coordinates for each player.                                                             |
+| `NEUTRAL_COOR` | `set(tuple(int,int))`           | Coordinates of neutral spaces on the board.                                                         |
+| `ALL_COOR`     | `set(tuple(int,int))`           | Set of all valid board coordinates.                                                                 |
+| `DIRECTIONS`   | `set(tuple(int,int))`           | Unit vectors for the six directions on the board. `{(1,0), (0,1), (-1,1), (-1,0), (0,-1), (1,-1)}`. |
+
+---
+
+Start experimenting with these functions to make your custom bot the smartest on the board! 🧠🎮
