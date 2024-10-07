@@ -1,5 +1,7 @@
 # 🐉 Chinese Checkers Game
 
+![Preview](./images/preview.png)
+
 ## 🤔 What is Chinese Checkers?
 
 **Chinese Checkers** is a strategy board game originating from Germany, known as "**Sternhalma**". It can be played by two, three, four, or six players, either individually or in teams. The game is a modern and simplified variation of the game **Halma**.
