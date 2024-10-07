@@ -5,7 +5,7 @@ from game_logic.literals import *
 import pygame
 
 pygame.init()
-window = pygame.display.set_mode((WIDTH, HEIGHT), pygame.SCALED | pygame.SRCALPHA)
+window = pygame.display.set_mode((1920, 1080), pygame.SCALED | pygame.SRCALPHA)
 pygame.display.set_caption('Chinese Checkers')
 
 lc = LoopController()
