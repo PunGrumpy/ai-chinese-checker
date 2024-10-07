@@ -1,12 +1,11 @@
 from .game import *
 from .player import *
 from .helpers import *
-import sys, os.path
+import sys
 import pygame
 from pygame.locals import *
 from PySide6 import QtWidgets, QtCore, QtGui
-from time import strftime
-from custom_bots import *
+from bots import *
 import time
 
 

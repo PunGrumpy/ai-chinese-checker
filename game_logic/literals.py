@@ -1,9 +1,3 @@
-# from tkinter import Tk
-# root = Tk()
-# screen_w = int(root.winfo_screenwidth() * 0.9)
-# screen_h = int(root.winfo_screenheight() * 0.9)
-# root.destroy()
-# del Tk
 from PySide6 import QtWidgets
 import sys
 
