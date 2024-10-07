@@ -52,3 +52,44 @@ The game ends when a player successfully moves all of their pieces to the opposi
 ## 📝 License
 
 This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for details.
+
+## 💖 Thanks for owner of this project
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/henrychess">
+        <img src="https://avatars.githubusercontent.com/u/91649568?v=4" width="100px;" alt="HenryChess"/>
+        <br />
+        <sub><b>HenryChess</b></sub>
+      </a>
+      <br />
+      <a title="Owner" href="https://github.com/henrychess/Chinese-Checkers">👑</a>
+    </td>
+  </tr>
+</table>
+
+## 💕 Contributors
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/PunGrumpy">
+        <img src="https://avatars.githubusercontent.com/u/108584943?v=4" width="100px;" alt="Noppkorn Kaewsalabnil"/>
+        <br />
+        <sub><b>PunGrumpy</b></sub>
+      </a>
+      <br />
+      <a title="Algorithm Developer" href="https://github.com/PunGrumpy">🧠</a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/Bobby9326">
+        <img src="https://avatars.githubusercontent.com/u/95424584?v=4" width="100px;" alt="Siwakorn Boonkaew"/>
+        <br />
+        <sub><b>Bobby9326</b></sub>
+      </a>
+      <br />
+      <a title="Game Logic Developer" href="https://github.com/Bobby9326">🎮</a>
+    </td>
+  </tr>
+</table>
