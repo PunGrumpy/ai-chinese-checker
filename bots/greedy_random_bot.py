@@ -5,8 +5,8 @@ from game_logic.game import *
 
 
 class GreedyRandomBotPlayer(Player):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, playerCount: int):
+        super().__init__(playerCount)
 
     def pickMove(self, g: Game):
         """returns [start_coor, end_coor]"""
@@ -44,6 +44,6 @@ class GreedyRandomBotPlayer(Player):
             coor = random.choice(list(tempMoves))
             move = random.choice(tempMoves[coor])
         return [
-            subj_to_obj_coor(coor, self.playerNum),
-            subj_to_obj_coor(move, self.playerNum),
+            subj_to_obj_coor(coor, self.playerNum, self.playerCount),
+            subj_to_obj_coor(move, self.playerNum, self.playerCount),
         ]

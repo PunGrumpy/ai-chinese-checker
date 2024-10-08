@@ -6,8 +6,8 @@ from game_logic.game import *
 
 
 class MinimaxAlphaBetaBotPlayer(Player):
-    def __init__(self, depth=3, time_limit=5):
-        super().__init__()
+    def __init__(self, playerCount: int, depth=3, time_limit=5):
+        super().__init__(playerCount)
         self.depth = depth
         self.time_limit = time_limit
         self.start_time = 0
@@ -24,8 +24,8 @@ class MinimaxAlphaBetaBotPlayer(Player):
             for end in moves[start]:
                 # ใช้การ clone แทนการย้อนกลับ จะทำให้เร็วขึ้น เพราะไม่ต้องทำการย้อนกลับ
                 game_clone = g.clone()
-                obj_start = subj_to_obj_coor(start, self.playerNum)
-                obj_end = subj_to_obj_coor(end, self.playerNum)
+                obj_start = subj_to_obj_coor(start, self.playerNum, self.playerCount)
+                obj_end = subj_to_obj_coor(end, self.playerNum, self.playerCount)
 
                 game_clone.movePiece(obj_start, obj_end)
                 score = self.minimax(game_clone, self.depth - 1, alpha, beta, False)
@@ -61,8 +61,8 @@ class MinimaxAlphaBetaBotPlayer(Player):
         moves = g.allMovesDict(self.playerNum)
         for start in moves:
             for end in moves[start]:
-                obj_start = subj_to_obj_coor(start, self.playerNum)
-                obj_end = subj_to_obj_coor(end, self.playerNum)
+                obj_start = subj_to_obj_coor(start, self.playerNum, self.playerCount)
+                obj_end = subj_to_obj_coor(end, self.playerNum, self.playerCount)
 
                 g.movePiece(obj_start, obj_end)
                 eval = self.minimax(g, depth - 1, alpha, beta, False)
@@ -80,8 +80,8 @@ class MinimaxAlphaBetaBotPlayer(Player):
         moves = g.allMovesDict(opponent)
         for start in moves:
             for end in moves[start]:
-                obj_start = subj_to_obj_coor(start, opponent)
-                obj_end = subj_to_obj_coor(end, opponent)
+                obj_start = subj_to_obj_coor(start, opponent, self.playerCount)
+                obj_end = subj_to_obj_coor(end, opponent, self.playerCount)
 
                 g.movePiece(obj_start, obj_end)
                 eval = self.minimax(g, depth - 1, alpha, beta, True)
@@ -136,6 +136,6 @@ class MinimaxAlphaBetaBotPlayer(Player):
         moves = g.allMovesDict(self.playerNum)
         start = random.choice(list(moves.keys()))
         end = random.choice(moves[start])
-        return subj_to_obj_coor(start, self.playerNum), subj_to_obj_coor(
-            end, self.playerNum
-        )
+        return subj_to_obj_coor(
+            start, self.playerNum, self.playerCount
+        ), subj_to_obj_coor(end, self.playerNum, self.playerCount)

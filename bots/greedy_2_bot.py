@@ -7,8 +7,8 @@ from game_logic.game import *
 class Greedy2BotPlayer(Player):
     """Always finds a move that jumps through the maximum distance (dest[1] - coor[1])"""
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, playerCount: int):
+        super().__init__(playerCount)
 
     def pickMove(self, g: Game):
         """returns [start_coor, end_coor] in objective coordinates\n
@@ -44,8 +44,8 @@ class Greedy2BotPlayer(Player):
             start_coor = random.choice(list(sidewaysMoves))
             end_coor = random.choice(sidewaysMoves[start_coor])
             return [
-                subj_to_obj_coor(start_coor, self.playerNum),
-                subj_to_obj_coor(end_coor, self.playerNum),
+                subj_to_obj_coor(start_coor, self.playerNum, self.playerCount),
+                subj_to_obj_coor(end_coor, self.playerNum, self.playerCount),
             ]
         # forward: max distance
         for coor in forwardMoves:
@@ -67,6 +67,6 @@ class Greedy2BotPlayer(Player):
                             start_coor = coor
                             end_coor = dest
         return [
-            subj_to_obj_coor(start_coor, self.playerNum),
-            subj_to_obj_coor(end_coor, self.playerNum),
+            subj_to_obj_coor(start_coor, self.playerNum, self.playerCount),
+            subj_to_obj_coor(end_coor, self.playerNum, self.playerCount),
         ]
