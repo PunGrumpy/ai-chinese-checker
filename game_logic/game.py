@@ -5,17 +5,12 @@ import pygame, copy
 
 
 class Game:
-    def __init__(self, playerCount):
+    def __init__(self, playerCount,playerColor):
         self.width = 1920
         self.height = 1080
         self.playerCount = playerCount
-        self.pieces: dict[int, set[Piece]] = {
-            1: set(),
-            2: set(),
-            3: set(),
-            4: set(),
-            5: set(),
-            6: set(),
+        self.playerColor = playerColor
+        self.pieces: dict[int, set[Piece]] = {1: set(),2: set(),3: set(),4: set(),5: set(),6: set(),
         }
         self.board = self.createBoard(playerCount)
         # for drawing board
@@ -107,10 +102,35 @@ class Game:
         return Board
 
     def getValidMoves(self, startPos: tuple, playerNum: int, playerCount: int):
-        """Inputs the piece's starting position, playing player's number, and `self.board`.
-        Returns a `list` of objective coordinates of valid moves (end coordinates) that piece can make.
-        """
-
+        moves = []
+        for direction in DIRECTIONS:
+            destination = add(startPos, direction)
+            if destination not in self.board:
+                continue  # out of bounds
+            elif self.board[destination] == None:
+                moves.append(destination)  # walk
+            else:  # self.board[destination] != None
+                destination = add(destination, direction)
+                if destination not in self.board or self.board[destination] != None:
+                    continue  # out of bounds or can't jump
+                moves.append(destination)
+                checkJump(moves, self.board, destination, direction, playerNum)
+        for i in copy.deepcopy(moves):
+            # You can move past other player's territory, but you can't stay there.
+            if (
+                (i not in ZONE_COOR[1])
+                and (i not in ZONE_COOR[2])
+                and (i not in ZONE_COOR[3])
+                and (i not in ZONE_COOR[4])
+                and (i not in ZONE_COOR[5])
+                and (i not in ZONE_COOR[6])
+                and (i not in NEUTRAL_COOR)
+            ):
+                while i in moves:
+                    moves.remove(i)
+        return list(set(moves))
+    
+    def getValidMovesWithZone(self, startPos: tuple, playerNum: int, playerCount: int):
         # 2 Player
         if playerCount == 2:
             start_zone = 1 if playerNum == 1 else 4
@@ -150,12 +170,8 @@ class Game:
         for i in copy.deepcopy(moves):
             # You can move past other player's territory, but you can't stay there.
             if (
-                (i not in ZONE_COOR[1])
-                and (i not in ZONE_COOR[2])
-                and (i not in ZONE_COOR[3])
-                and (i not in ZONE_COOR[4])
-                and (i not in ZONE_COOR[5])
-                and (i not in ZONE_COOR[6])
+                (i not in ZONE_COOR[start_zone])
+                and (i not in ZONE_COOR[end_zone])
                 and (i not in NEUTRAL_COOR)
             ):
                 while i in moves:
@@ -164,7 +180,6 @@ class Game:
 
     def checkWin(self, playerNum: int, playerCount: int):
         check = False
-
         if playerCount == 2:
             end_zone = 4 if playerNum == 1 else 1
         elif playerCount == 3:
@@ -207,22 +222,24 @@ class Game:
             )
         return state
 
-    def allMovesDict(self, playerNum: int):
+    def allMovesDict(self, playerNum: int, withZone: bool):
         """Returns a dict of all valid moves, in subjective coordinates.
         The key is the coordinates of a piece (`tuple`), and the value is a `list` of destination coordinates.
         """
         moves = dict()
-        moves2 = dict()
+
 
         for p in self.pieces[playerNum]:
-            p_moves_list = self.getValidMoves(p.getCoor(), playerNum, self.playerCount)
+            if withZone:
+                p_moves_list = self.getValidMovesWithZone(p.getCoor(), playerNum, self.playerCount)
+            else:
+                p_moves_list = self.getValidMoves(p.getCoor(), playerNum, self.playerCount)
             if p_moves_list == []:
                 continue
             p_subj_coor = obj_to_subj_coor(p.getCoor(), playerNum, self.playerCount)
             moves[p_subj_coor] = [
                 obj_to_subj_coor(i, playerNum, self.playerCount) for i in p_moves_list
             ]
-            moves2[p.getCoor()] = p_moves_list
 
         return moves
 
@@ -267,11 +284,7 @@ class Game:
 
                 pygame.draw.circle(
                     window,
-                    PLAYER_COLORS[
-                        get_player_zone(
-                            self.board[obj_coor].getPlayerNum(), playerCount
-                        )
-                    ],
+                    self.playerColor[self.board[obj_coor].getPlayerNum()-1],
                     c,
                     self.circleRadius - 2,
                 )
@@ -313,7 +326,9 @@ class Game:
             ),
         )
         # triangles
-        colors = (RED, PURPLE, BLUE, GREEN, YELLOW, ORANGE)
+        colors = [DARK_GRAY, DARK_GRAY, DARK_GRAY, DARK_GRAY, DARK_GRAY, DARK_GRAY]
+        for i in range(playerCount):
+            colors[get_player_zone(i + 1, playerCount)] = self.playerColor[i]
         border = 10
         highlight_border = 12
 

@@ -1,9 +1,12 @@
+import pygame_gui
 from .game import *
 from .player import *
 from .helpers import *
 import sys
 import pygame
 from pygame.locals import *
+from pygame_gui.windows import UIColourPickerDialog
+from pygame_gui.elements import UIButton 
 from PySide6 import QtWidgets, QtCore, QtGui
 from bots import *
 import time
@@ -25,6 +28,7 @@ class LoopController:
         for i in PlayerMeta.playerTypes:
             self.playerTypes[i.__name__] = i
         self.playerList = []
+        self.playerColor = []
         pygame.event.set_allowed([QUIT, MOUSEBUTTONDOWN, MOUSEBUTTONUP])
 
     def mainLoop(self, window: pygame.Surface):
@@ -35,6 +39,7 @@ class LoopController:
             self.mainMenuLoop(window)
         elif self.loopNum == 1:  # Setting Screen
             self.playerList = []
+            self.playerColor = []
             self.loadPlayerLoop(window)
         elif self.loopNum == 2:  # Game Screen
             self.winnerList, self.replayRecord = self.gameplayLoop(
@@ -66,10 +71,12 @@ class LoopController:
             players = players[:6]
         for i in range(len(players)):
             players[i].setPlayerNum(i + 1)
+            if isinstance(players[i], HumanPlayer):
+                players[i].setPlayerColor(self.playerColor[i])
 
         mouse_hover_home = False
         # generate the Game
-        g = Game(len(players))
+        g = Game(len(players),self.playerColor)
         # some other settings
         replayRecord.append(str(len(players)))
         highlight = []
@@ -295,7 +302,6 @@ class LoopController:
         fontTitle = pygame.font.Font(self.font_path, 80)
         fontBody = pygame.font.Font(self.font_path, 36)
         fontSelect = pygame.font.Font(self.font_path, 24)
-        dark_gray = (100, 100, 100)
         start_hover = False
 
         # ข้อมูลเริ่มต้นของผู้เล่น
@@ -318,9 +324,34 @@ class LoopController:
         mouse_hover6 = False
         mouse_hover_tutorial = False
 
+        ui_manager = pygame_gui.UIManager((1920, 1080))
+        colour_image = pygame.image.load("images/logo_color.png").convert_alpha()
+        colour_image = pygame.transform.scale(colour_image, (50, 50))
+        
+        # สร้างปุ่มที่ไม่ทำการ hover
+        colour_picker_button1 = NonHoverButton(pygame.Rect(890, 450, 50, 50), "", ui_manager)
+        colour_picker_button2 = NonHoverButton(pygame.Rect(1690, 450, 50, 50), "", ui_manager)
+        colour_picker_button3 = NonHoverButton(pygame.Rect(890, 600, 50, 50), "", ui_manager)
+        colour_picker_button4 = NonHoverButton(pygame.Rect(1690, 600, 50, 50), "", ui_manager)
+        colour_picker_button5 = NonHoverButton(pygame.Rect(890, 750, 50, 50), "", ui_manager)
+        colour_picker_button6 = NonHoverButton(pygame.Rect(1690, 750, 50, 50), "", ui_manager)
+
+
+
+
+        colour_picker =  None  
+        selected_player_colour_picker = 0                        
+        current_colour1 = pygame.Color(PLAYER_COLORS[0])
+        current_colour2 = pygame.Color(PLAYER_COLORS[1])
+        current_colour3 = pygame.Color(DARK_GRAY)
+        current_colour4 = pygame.Color(DARK_GRAY)
+        current_colour5 = pygame.Color(DARK_GRAY)
+        current_colour6 = pygame.Color(DARK_GRAY)
+        clock = pygame.time.Clock()
         # วาดหน้าเริ่มต้น
         running = True
         while running:
+            time_delta = clock.tick(60) / 1000.0
             self.draw_gradient_background(window, (255, 0, 0), (0, 0, 0))  # เคลียร์หน้าจอ
 
             # วาดกรอบ
@@ -374,7 +405,7 @@ class LoopController:
                 (
                     YELLOW
                     if selected_player_count == 6
-                    else (GRAY if mouse_hover6 else dark_gray)
+                    else (GRAY if mouse_hover6 else DARK_GRAY)
                 ),
                 rButton_6P_rect,
                 border_radius=20,
@@ -392,7 +423,7 @@ class LoopController:
                 (
                     YELLOW
                     if selected_player_count == 4
-                    else (GRAY if mouse_hover4 else dark_gray)
+                    else (GRAY if mouse_hover4 else DARK_GRAY)
                 ),
                 rButton_4P_rect,
                 border_radius=20,
@@ -410,7 +441,7 @@ class LoopController:
                 (
                     YELLOW
                     if selected_player_count == 3
-                    else (GRAY if mouse_hover3 else dark_gray)
+                    else (GRAY if mouse_hover3 else DARK_GRAY)
                 ),
                 rButton_3P_rect,
                 border_radius=20,
@@ -428,7 +459,7 @@ class LoopController:
                 (
                     YELLOW
                     if selected_player_count == 2
-                    else (GRAY if mouse_hover2 else dark_gray)
+                    else (GRAY if mouse_hover2 else DARK_GRAY)
                 ),
                 rButton_2P_rect,
                 border_radius=20,
@@ -446,9 +477,9 @@ class LoopController:
             right_arrow_points = [(0, 0), (50, 25), (0, 50)]
 
             # Player 1 Setting
-            player1x = 200
+            player1x = 170
             player1y = 450
-            label_Setting_rect1 = pygame.Rect(player1x, player1y, 100, 50)  # player1
+            label_Setting_rect1 = pygame.Rect(player1x+30, player1y, 100, 50)  # player1
             draw_text(window, "Player 1", fontBody, WHITE, label_Setting_rect1)
 
             label_rect1 = pygame.Rect(
@@ -456,7 +487,7 @@ class LoopController:
             )  # selected 1
             pygame.draw.rect(
                 window,
-                WHITE if selected_player_count >= 1 else dark_gray,
+                WHITE if selected_player_count >= 1 else DARK_GRAY,
                 label_rect1,
                 border_radius=20,
             )  # วาดพื้นหลัง
@@ -480,18 +511,24 @@ class LoopController:
             pygame.draw.polygon(rigth_arrow1_surface, YELLOW, right_arrow_points)
             window.blit(rigth_arrow1_surface, right_arrow_rect1.topleft)
 
+            pygame.draw.circle(window,(current_colour1.r,current_colour1.g,current_colour1.b),(player1x + 745, player1y+25),25,25,)
+            colour_picker_button1.set_image(colour_image)
+            
+
+  
+
             # Player 2 Setting
-            player1x = 1020
-            player1y = 450
-            label_Setting_rect2 = pygame.Rect(player1x, player1y, 100, 50)  # player2
+            player2x = 970
+            player2y = 450
+            label_Setting_rect2 = pygame.Rect(player2x+30, player2y, 100, 50)  # player2
             draw_text(window, "Player 2", fontBody, WHITE, label_Setting_rect2)
 
             label_rect2 = pygame.Rect(
-                player1x + 200, player1y - 10, 500, 70
+                player2x + 200, player2y - 10, 500, 70
             )  # selected 2
             pygame.draw.rect(
                 window,
-                WHITE if selected_player_count >= 2 else dark_gray,
+                WHITE if selected_player_count >= 2 else DARK_GRAY,
                 label_rect2,
                 border_radius=20,
             )  # วาดพื้นหลัง
@@ -503,22 +540,26 @@ class LoopController:
                 label_rect2,
             )
 
-            left_arrow_rect2 = pygame.Rect(player1x + 220, player1y, 50, 50)  # ลูกศรซ้าย
+            left_arrow_rect2 = pygame.Rect(player2x + 220, player2y, 50, 50)  # ลูกศรซ้าย
             left_arrow2_surface = pygame.Surface((50, 50), pygame.SRCALPHA)
             left_arrow2_surface.fill((0, 0, 0, 0))
             pygame.draw.polygon(left_arrow2_surface, YELLOW, left_arrow_points)
             window.blit(left_arrow2_surface, left_arrow_rect2.topleft)
 
-            right_arrow_rect2 = pygame.Rect(player1x + 630, player1y, 50, 50)  # ลูกศรขวา
+            right_arrow_rect2 = pygame.Rect(player2x + 630, player2y, 50, 50)  # ลูกศรขวา
             rigth_arrow2_surface = pygame.Surface((50, 50), pygame.SRCALPHA)
             rigth_arrow2_surface.fill((0, 0, 0, 0))
             pygame.draw.polygon(rigth_arrow2_surface, YELLOW, right_arrow_points)
             window.blit(rigth_arrow2_surface, right_arrow_rect2.topleft)
 
+            pygame.draw.circle(window,(current_colour2.r,current_colour2.g,current_colour2.b),(player2x + 745, player2y+25),25,25,)
+            colour_picker_button2.set_image(colour_image)
+
+
             # Player 3 Setting
-            player3x = 200
+            player3x = 170
             player3y = 600
-            label_Setting_rect3 = pygame.Rect(player3x, player3y, 100, 50)  # player3
+            label_Setting_rect3 = pygame.Rect(player3x+30, player3y, 100, 50)  # player3
             draw_text(window, "Player 3", fontBody, WHITE, label_Setting_rect3)
 
             label_rect3 = pygame.Rect(
@@ -526,7 +567,7 @@ class LoopController:
             )  # selected 3
             pygame.draw.rect(
                 window,
-                WHITE if selected_player_count >= 3 else dark_gray,
+                WHITE if selected_player_count >= 3 else DARK_GRAY,
                 label_rect3,
                 border_radius=20,
             )  # วาดพื้นหลัง
@@ -547,7 +588,7 @@ class LoopController:
             left_arrow3_surface.fill((0, 0, 0, 0))
             pygame.draw.polygon(
                 left_arrow3_surface,
-                YELLOW if selected_player_count >= 3 else dark_gray,
+                YELLOW if selected_player_count >= 3 else DARK_GRAY,
                 left_arrow_points,
             )
             window.blit(left_arrow3_surface, left_arrow_rect3.topleft)
@@ -557,15 +598,19 @@ class LoopController:
             rigth_arrow3_surface.fill((0, 0, 0, 0))
             pygame.draw.polygon(
                 rigth_arrow3_surface,
-                YELLOW if selected_player_count >= 3 else dark_gray,
+                YELLOW if selected_player_count >= 3 else DARK_GRAY,
                 right_arrow_points,
             )
             window.blit(rigth_arrow3_surface, right_arrow_rect3.topleft)
 
+            pygame.draw.circle(window,(current_colour3.r,current_colour3.g,current_colour3.b),(player3x + 745, player3y+25),25,25,)
+            colour_picker_button3.set_image(colour_image)
+            colour_picker_button3.disable() if selected_player_count < 3 else  colour_picker_button3.enable()
+
             # Player 4 Setting
-            player4x = 1020
+            player4x = 970
             player4y = 600
-            label_Setting_rect4 = pygame.Rect(player4x, player4y, 100, 50)  # player4
+            label_Setting_rect4 = pygame.Rect(player4x+30, player4y, 100, 50)  # player4
             draw_text(window, "Player 4", fontBody, WHITE, label_Setting_rect4)
 
             label_rect4 = pygame.Rect(
@@ -573,7 +618,7 @@ class LoopController:
             )  # selected 4
             pygame.draw.rect(
                 window,
-                WHITE if selected_player_count >= 4 else dark_gray,
+                WHITE if selected_player_count >= 4 else DARK_GRAY,
                 label_rect4,
                 border_radius=20,
             )  # วาดพื้นหลัง
@@ -594,25 +639,30 @@ class LoopController:
             left_arrow4_surface.fill((0, 0, 0, 0))
             pygame.draw.polygon(
                 left_arrow4_surface,
-                YELLOW if selected_player_count >= 4 else dark_gray,
+                YELLOW if selected_player_count >= 4 else DARK_GRAY,
                 left_arrow_points,
             )
             window.blit(left_arrow4_surface, left_arrow_rect4.topleft)
-
+            
+            
             right_arrow_rect4 = pygame.Rect(player4x + 630, player4y, 50, 50)  # ลูกศรขวา
             rigth_arrow4_surface = pygame.Surface((50, 50), pygame.SRCALPHA)
             rigth_arrow4_surface.fill((0, 0, 0, 0))
             pygame.draw.polygon(
                 rigth_arrow4_surface,
-                YELLOW if selected_player_count >= 4 else dark_gray,
+                YELLOW if selected_player_count >= 4 else DARK_GRAY,
                 right_arrow_points,
             )
             window.blit(rigth_arrow4_surface, right_arrow_rect4.topleft)
 
+            pygame.draw.circle(window,(current_colour4.r,current_colour4.g,current_colour4.b),(player4x + 745, player4y+25),25,25,)
+            colour_picker_button4.set_image(colour_image)
+            colour_picker_button4.disable() if selected_player_count < 4 else  colour_picker_button4.enable()
+
             # Player 5 Setting
-            player5x = 200
+            player5x = 170
             player5y = 750
-            label_Setting_rect5 = pygame.Rect(player5x, player5y, 100, 50)  # player5
+            label_Setting_rect5 = pygame.Rect(player5x+30, player5y, 100, 50)  # player5
             draw_text(window, "Player 5", fontBody, WHITE, label_Setting_rect5)
 
             label_rect5 = pygame.Rect(
@@ -620,7 +670,7 @@ class LoopController:
             )  # selected 5
             pygame.draw.rect(
                 window,
-                WHITE if selected_player_count >= 5 else dark_gray,
+                WHITE if selected_player_count >= 5 else DARK_GRAY,
                 label_rect5,
                 border_radius=20,
             )  # วาดพื้นหลัง
@@ -641,7 +691,7 @@ class LoopController:
             left_arrow5_surface.fill((0, 0, 0, 0))
             pygame.draw.polygon(
                 left_arrow5_surface,
-                YELLOW if selected_player_count >= 5 else dark_gray,
+                YELLOW if selected_player_count >= 5 else DARK_GRAY,
                 left_arrow_points,
             )
             window.blit(left_arrow5_surface, left_arrow_rect5.topleft)
@@ -651,15 +701,19 @@ class LoopController:
             rigth_arrow5_surface.fill((0, 0, 0, 0))
             pygame.draw.polygon(
                 rigth_arrow5_surface,
-                YELLOW if selected_player_count >= 5 else dark_gray,
+                YELLOW if selected_player_count >= 5 else DARK_GRAY,
                 right_arrow_points,
             )
             window.blit(rigth_arrow5_surface, right_arrow_rect5.topleft)
 
+            pygame.draw.circle(window,(current_colour5.r,current_colour5.g,current_colour5.b),(player5x + 745, player5y+25),25,25,)
+            colour_picker_button5.set_image(colour_image)
+            colour_picker_button5.disable() if selected_player_count < 5 else  colour_picker_button5.enable()
+
             # Player 6 Setting
-            player6x = 1020
+            player6x = 970
             player6y = 750
-            label_Setting_rect6 = pygame.Rect(player6x, player6y, 100, 50)  # player6
+            label_Setting_rect6 = pygame.Rect(player6x+30, player6y, 100, 50)  # player6
             draw_text(window, "Player 6", fontBody, WHITE, label_Setting_rect6)
 
             label_rect6 = pygame.Rect(
@@ -667,7 +721,7 @@ class LoopController:
             )  # selected 6
             pygame.draw.rect(
                 window,
-                WHITE if selected_player_count >= 6 else dark_gray,
+                WHITE if selected_player_count >= 6 else DARK_GRAY,
                 label_rect6,
                 border_radius=20,
             )  # วาดพื้นหลัง
@@ -688,7 +742,7 @@ class LoopController:
             left_arrow6_surface.fill((0, 0, 0, 0))
             pygame.draw.polygon(
                 left_arrow6_surface,
-                YELLOW if selected_player_count >= 6 else dark_gray,
+                YELLOW if selected_player_count >= 6 else DARK_GRAY,
                 left_arrow_points,
             )
             window.blit(left_arrow6_surface, left_arrow_rect6.topleft)
@@ -698,10 +752,14 @@ class LoopController:
             rigth_arrow6_surface.fill((0, 0, 0, 0))
             pygame.draw.polygon(
                 rigth_arrow6_surface,
-                YELLOW if selected_player_count >= 6 else dark_gray,
+                YELLOW if selected_player_count >= 6 else DARK_GRAY,
                 right_arrow_points,
             )
             window.blit(rigth_arrow6_surface, right_arrow_rect6.topleft)
+
+            pygame.draw.circle(window,(current_colour6.r,current_colour6.g,current_colour6.b),(player6x + 745, player6y+25),25,25,)
+            colour_picker_button6.set_image(colour_image)
+            colour_picker_button6.disable() if selected_player_count < 6 else  colour_picker_button6.enable()
 
             # วาดปุ่มเริ่มเกม
 
@@ -733,6 +791,7 @@ class LoopController:
 
             # ตรวจสอบเหตุการณ์
             for event in pygame.event.get():
+                ui_manager.process_events(event)
                 if event.type == pygame.QUIT:
                     running = False
                 if event.type == pygame.MOUSEMOTION:  # ตรวจสอบการเคลื่อนที่ของเมาส์ (Hover)
@@ -797,17 +856,33 @@ class LoopController:
                         selected_player4_type = 0
                         selected_player5_type = 0
                         selected_player6_type = 0
+                        current_colour3 = pygame.Color(DARK_GRAY)
+                        current_colour4 = pygame.Color(DARK_GRAY)
+                        current_colour5 = pygame.Color(DARK_GRAY)
+                        current_colour6 = pygame.Color(DARK_GRAY)
                     elif rButton_3P_rect.collidepoint(mouse_pos):
                         selected_player_count = 3
                         selected_player4_type = 0
                         selected_player5_type = 0
                         selected_player6_type = 0
+                        current_colour3 = pygame.Color(PLAYER_COLORS[2])
+                        current_colour4 = pygame.Color(DARK_GRAY)
+                        current_colour5 = pygame.Color(DARK_GRAY)
+                        current_colour6 = pygame.Color(DARK_GRAY)
                     elif rButton_4P_rect.collidepoint(mouse_pos):
                         selected_player_count = 4
                         selected_player5_type = 0
                         selected_player6_type = 0
+                        current_colour3 = pygame.Color(PLAYER_COLORS[2])
+                        current_colour4 = pygame.Color(PLAYER_COLORS[3])
+                        current_colour5 = pygame.Color(DARK_GRAY)
+                        current_colour6 = pygame.Color(DARK_GRAY)
                     elif rButton_6P_rect.collidepoint(mouse_pos):
                         selected_player_count = 6
+                        current_colour3 = pygame.Color(PLAYER_COLORS[2])
+                        current_colour4 = pygame.Color(PLAYER_COLORS[3])
+                        current_colour5 = pygame.Color(PLAYER_COLORS[4])
+                        current_colour6 = pygame.Color(PLAYER_COLORS[5])
 
                     if left_arrow_rect1.collidepoint(mouse_pos):  # player1
                         selected_player1_type = (
@@ -934,6 +1009,18 @@ class LoopController:
                                     selected_player_count
                                 )
                             )
+                        current_colour_list = [
+                            current_colour1,
+                            current_colour2,
+                            current_colour3,
+                            current_colour4,
+                            current_colour5,
+                            current_colour6,
+                        ]
+                        for i in range(selected_player_count):
+                            current_colour = current_colour_list[i]
+                            self.playerColor.append((current_colour.r,current_colour.g,current_colour.b))
+                        print(self.playerColor)
 
                         running = False
 
@@ -941,7 +1028,69 @@ class LoopController:
                         self.backToMenu()
 
                         running = False
+                if event.type == pygame_gui.UI_BUTTON_PRESSED and event.ui_element == colour_picker_button1: #set Color of player 1
+                    colour_picker = UIColourPickerDialog(pygame.Rect(50, 50, 300, 300),ui_manager,window_title="Change Colour Player 1",initial_colour=current_colour1)
+                    colour_picker_button1.disable()
+                    selected_player_colour_picker = 1
 
+                if event.type == pygame_gui.UI_BUTTON_PRESSED and event.ui_element == colour_picker_button2: #set Color of player 2
+                    colour_picker = UIColourPickerDialog(pygame.Rect(50, 50, 300, 300),ui_manager,window_title="Change Colour Player 2",initial_colour=current_colour2)
+                    colour_picker_button2.disable()
+                    selected_player_colour_picker = 2
+
+                if event.type == pygame_gui.UI_BUTTON_PRESSED and event.ui_element == colour_picker_button3: #set Color of player 3
+                    colour_picker = UIColourPickerDialog(pygame.Rect(50, 50, 300, 300),ui_manager,window_title="Change Colour Player 3",initial_colour=current_colour3)
+                    colour_picker_button3.disable()
+                    selected_player_colour_picker = 3
+
+                if event.type == pygame_gui.UI_BUTTON_PRESSED and event.ui_element == colour_picker_button4: #set Color of player 4
+                    colour_picker = UIColourPickerDialog(pygame.Rect(50, 50, 300, 300),ui_manager,window_title="Change Colour Player 4",initial_colour=current_colour4)
+                    colour_picker_button4.disable()
+                    selected_player_colour_picker = 4
+
+                if event.type == pygame_gui.UI_BUTTON_PRESSED and event.ui_element == colour_picker_button5: #set Color of player 5
+                    colour_picker = UIColourPickerDialog(pygame.Rect(50, 50, 300, 300),ui_manager,window_title="Change Colour Player 5",initial_colour=current_colour5)
+                    colour_picker_button5.disable()
+                    selected_player_colour_picker = 5
+
+                if event.type == pygame_gui.UI_BUTTON_PRESSED and event.ui_element == colour_picker_button6: #set Color of player 6
+                    colour_picker = UIColourPickerDialog(pygame.Rect(50, 50, 300, 300),ui_manager,window_title="Change Colour Player 6",initial_colour=current_colour6)
+                    colour_picker_button5.disable()
+                    selected_player_colour_picker = 6
+
+                if event.type == pygame_gui.UI_COLOUR_PICKER_COLOUR_PICKED:
+                    if selected_player_colour_picker == 1:
+                        current_colour1 = event.colour
+                    elif selected_player_colour_picker == 2:
+                        current_colour2 = event.colour
+                    elif selected_player_colour_picker == 3:
+                        current_colour3 = event.colour
+                    elif selected_player_colour_picker == 4:
+                        current_colour4 = event.colour
+                    elif selected_player_colour_picker == 5:
+                        current_colour5 = event.colour
+                    elif selected_player_colour_picker == 6:
+                        current_colour6 = event.colour
+                    
+                if event.type == pygame_gui.UI_WINDOW_CLOSE and colour_picker:
+                    if selected_player_colour_picker == 1:
+                        colour_picker_button1.enable() 
+                    elif selected_player_colour_picker == 2:
+                        colour_picker_button2.enable() 
+                    elif selected_player_colour_picker == 3:
+                        colour_picker_button3.enable() 
+                    elif selected_player_colour_picker == 4:
+                        colour_picker_button4.enable() 
+                    elif selected_player_colour_picker == 5:
+                        colour_picker_button5.enable() 
+                    elif selected_player_colour_picker == 6:
+                        colour_picker_button6.enable()           
+                    colour_picker = None
+                    selected_player_colour_picker = 0
+
+
+            ui_manager.update(time_delta)
+            ui_manager.draw_ui(window) 
             pygame.display.update()
 
     # helpers for loadPlayerLoop and replayLoop
@@ -986,15 +1135,12 @@ class LoopController:
             mouse_left_click = pygame.mouse.get_pressed()[0]
 
             # กำหนดค่าโปร่งใส (alpha) ให้กับสีสี่เหลี่ยม (0-255, 128 ประมาณ 50% โปร่งใส)
-            rect_color = (150, 0, 0, 15)  # สีเทา พร้อม alpha = 153 (60% โปร่งใส)
-
-            # วาดสี่เหลี่ยมพร้อมขอบมน
-
+            rect_color = (150, 0, 0, 100)  # สีเทา พร้อม alpha = 153 (60% โปร่งใส)
             pygame.draw.rect(
                 window, rect_color, (160, 140, 1600, 800), border_radius=20
             )
 
-            # วางพื้นผิวโปร่งใสลงบนหน้าต่างหลัก
+
             window.blit(player_text, player_text_rect)
 
             if CloseButton.isClicked(mouse_pos, mouse_left_click):
