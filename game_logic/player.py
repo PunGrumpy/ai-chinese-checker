@@ -38,6 +38,13 @@ class Player(ABC, metaclass=PlayerMeta):
 class HumanPlayer(Player):
     def __init__(self, playerCount: int):
         super().__init__(playerCount)
+        self.playerColor = (0,0,0)
+    
+    def getPlayerColor(self):
+        return self.playerColor
+
+    def setPlayerColor(self, color: tuple):
+        self.playerColor = color
 
     def pickMove(self, g: Game, window: pygame.Surface, highlight=None):
         pieceSet: set[Piece] = g.pieces[self.playerNum]
@@ -106,9 +113,7 @@ class HumanPlayer(Player):
                     pygame.draw.circle(
                         window,
                         brighten_color(
-                            PLAYER_COLORS[
-                                get_player_zone(piece.getPlayerNum(), self.playerCount)
-                            ],
+                            self.playerColor,
                             0.75,
                         ),
                         absCoor,
@@ -123,9 +128,7 @@ class HumanPlayer(Player):
                     # draw a circle of the original color
                     pygame.draw.circle(
                         window,
-                        PLAYER_COLORS[
-                            get_player_zone(piece.getPlayerNum(), self.playerCount)
-                        ],
+                        self.playerColor,
                         absCoor,
                         g.circleRadius - 2,
                     )
@@ -155,7 +158,7 @@ class HumanPlayer(Player):
                         prev_selected_piece_coor != ()
                         and selected_piece_coor != prev_selected_piece_coor
                     ):
-                        g.drawBoard(window, self.playerCount)
+                        g.drawBoard(window, self.playerCount,self.playerNum)
                     prev_selected_piece_coor = selected_piece_coor
                     # draw a semi-transparent gray circle outside the piece
                     pygame.draw.circle(

@@ -10,7 +10,7 @@ class RandomBotPlayer(Player):
 
     def pickMove(self, g: Game):
         """returns [start_coor, end_coor]"""
-        moves = g.allMovesDict(self.playerNum)
+        moves = g.allMovesDict(self.playerNum,True)
         l = []
         for coor in moves:
             if moves[coor] != []:
