@@ -46,7 +46,7 @@ class MinimaxAlphaBetaBotPlayer(Player):
     def minimax(self, g: Game, depth, alpha, beta, maximizing_player):
         if (
             depth == 0
-            or g.checkWin(self.playerNum)
+            or g.checkWin(self.playerNum,self.playerCount)
             or time.time() - self.start_time > self.time_limit
         ):
             return self.evaluate(g)
