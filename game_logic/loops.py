@@ -32,8 +32,7 @@ class LoopController:
         pygame.event.set_allowed([QUIT, MOUSEBUTTONDOWN, MOUSEBUTTONUP])
 
     def mainLoop(self, window: pygame.Surface):
-        # print(f"Loop goes on with loopNum {self.loopNum}")
-        print(self.loopNum)
+
         if self.loopNum == 0:  # Home Screen
             pygame.event.set_allowed([QUIT, MOUSEBUTTONDOWN, MOUSEBUTTONUP])
             self.mainMenuLoop(window)
@@ -169,16 +168,13 @@ class LoopController:
             highlight = [start_coor, end_coor]
             replayRecord.append(str(start_coor) + "to" + str(end_coor))
             winning = g.checkWin(playingPlayer.getPlayerNum(), len(players))
-            print(winning)
             # if winning and len(players) == 2:
             if winning:
                 g.drawBoard(window, len(players), playingPlayerIndex)
                 playingPlayer.has_won = True
                 returnStuff[0].append(playingPlayer.getPlayerNum())
-                # print('The winner is Player %d' % playingPlayer.getPlayerNum())
                 returnStuff[1] = replayRecord
                 self.loopNum = 3
-                # print(returnStuff)
                 return returnStuff
 
             if playingPlayerIndex >= len(players) - 1:
@@ -189,8 +185,6 @@ class LoopController:
     def gameOverLoop(
         self, window: pygame.Surface, winnerList: list, replayRecord: list
     ):
-        # print(winnerList); print(replayRecord)
-        # winner announcement text
         self.draw_gradient_background(window, (255, 0, 0), (0, 0, 0))
 
         title_font = pygame.font.Font(self.font_path, int(self.width * 0.08))
@@ -257,15 +251,12 @@ class LoopController:
             mouse_left_click = pygame.mouse.get_pressed()[0]
 
             if PlayButton.isClicked(mouse_pos, mouse_left_click):
-                # print("play")
                 self.loopNum = 2
                 break
             if SettingButton.isClicked(mouse_pos, mouse_left_click):
-                # print("play")
                 self.loopNum = 1
                 break
             if MenuButton.isClicked(mouse_pos, mouse_left_click):
-                # print("play")
                 self.loopNum = 0
                 break
             if PlayButton.isHovering(mouse_pos):
@@ -842,10 +833,7 @@ class LoopController:
 
                     # ตรวจสอบการคลิกปุ่ม tutorial
                     if tutorial_button_rect.collidepoint(mouse_pos):
-                        print("tutorial")
-                        print(self.loopNum)
                         self.loopNum = 4
-                        print(self.loopNum)
                         running = False
 
                     # ตรวจสอบการคลิกปุ่มเลือกจำนวนผู้เล่น
@@ -1020,7 +1008,6 @@ class LoopController:
                         for i in range(selected_player_count):
                             current_colour = current_colour_list[i]
                             self.playerColor.append((current_colour.r,current_colour.g,current_colour.b))
-                        print(self.playerColor)
 
                         running = False
 
@@ -1095,7 +1082,6 @@ class LoopController:
 
     # helpers for loadPlayerLoop and replayLoop
     def startGame(self):
-        # print(self.playerList)
         self.loopNum = 2  # go to gameplay
 
     def backToMenu(self):
@@ -1108,15 +1094,15 @@ class LoopController:
 
     def loadTutorial(self, window: pygame.Surface):
 
-        title_font = pygame.font.Font(self.font_path, 60)
-        player_text = title_font.render(f"Tutorial", True, WHITE)
-        player_text_rect = player_text.get_rect()
-        player_text_rect.center = (self.width * 0.5, self.height * 0.18)
+        
+        selected_page = 1
+        left_hovering = False
+        right_hovering = False
 
         CloseButton = TextButton(
             "Close",
             centerx=int(self.width * 0.5),
-            centery=int(self.height * 0.8),
+            centery=int(self.height * 0.82),
             width=self.width * 0.08,
             height=self.height * 0.05,
             font=self.font_path,
@@ -1137,14 +1123,37 @@ class LoopController:
             # กำหนดค่าโปร่งใส (alpha) ให้กับสีสี่เหลี่ยม (0-255, 128 ประมาณ 50% โปร่งใส)
             rect_color = (150, 0, 0, 100)  # สีเทา พร้อม alpha = 153 (60% โปร่งใส)
             pygame.draw.rect(
-                window, rect_color, (160, 140, 1600, 800), border_radius=20
+                window, rect_color, (160, 120, 1600, 800), border_radius=20
             )
 
+            image = pygame.image.load("images/Tutorial_page_"+str(selected_page)+".png")
+            image = pygame.transform.scale(image, (1400, 800))
+            window.blit(image, (260, 120))
 
-            window.blit(player_text, player_text_rect)
+
+            left_arrow_rect = pygame.Rect(180, 510, 50, 50)  # ลูกศรซ้าย
+            left_arrow_surface = pygame.Surface((50, 50), pygame.SRCALPHA)
+            left_arrow_surface.fill((0, 0, 0, 0))
+            pygame.draw.polygon(
+                left_arrow_surface,
+                YELLOW if left_hovering else WHITE,
+                [(50, 0), (0, 25), (50, 50)]
+            )
+            window.blit(left_arrow_surface, left_arrow_rect.topleft)
+            
+            
+            right_arrow_rect = pygame.Rect(1690, 510, 50, 50)  # ลูกศรขวา
+            rigth_arrow_surface = pygame.Surface((50, 50), pygame.SRCALPHA)
+            rigth_arrow_surface.fill((0, 0, 0, 0))
+            pygame.draw.polygon(
+                rigth_arrow_surface,
+                YELLOW if right_hovering else WHITE,
+                [(0, 0), (50, 25), (0, 50)]
+            )
+            window.blit(rigth_arrow_surface, right_arrow_rect.topleft)
+
 
             if CloseButton.isClicked(mouse_pos, mouse_left_click):
-                # print("play")
                 self.loopNum = 1
                 break
 
@@ -1154,6 +1163,30 @@ class LoopController:
                 CloseButton.text_color = WHITE
 
             CloseButton.draw(window, mouse_pos)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    break
+                if event.type == pygame.MOUSEMOTION:  # ตรวจสอบการเคลื่อนที่ของเมาส์ (Hover)
+                    mouse_pos = pygame.mouse.get_pos()
+
+                    if left_arrow_rect.collidepoint(mouse_pos):
+                        left_hovering = True
+                    else:
+                        left_hovering = False
+                    if right_arrow_rect.collidepoint(mouse_pos):
+                        right_hovering = True
+                    else:
+                        right_hovering = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = pygame.mouse.get_pos()
+
+                    # ตรวจสอบการคลิกปุ่ม tutorial
+                    if left_arrow_rect.collidepoint(mouse_pos):
+                        selected_page -= 1 if selected_page > 1 else -4
+                    
+                    if right_arrow_rect.collidepoint(mouse_pos):
+                        selected_page += 1 if selected_page < 5 else -4
 
             pygame.display.update()
 
@@ -1209,11 +1242,9 @@ class LoopController:
             mouse_pos = pygame.mouse.get_pos()
             mouse_left_click = ev.type == MOUSEBUTTONDOWN
             if StartButton.isClicked(mouse_pos, mouse_left_click):
-                # print("play")
                 self.loopNum = 1
                 break
             if ExitButton.isClicked(mouse_pos, mouse_left_click):
-                # print('load-replay')
                 pygame.quit()
                 sys.exit()
 
