@@ -1,4 +1,3 @@
-import pygame_gui
 from .literals import *
 import math
 import pygame
@@ -382,10 +381,11 @@ class TextButton(Button):
 
     def isClicked(self, mouse_pos, mouse_left_click):
         return super().isClicked(mouse_pos, mouse_left_click)
-class NonHoverButton(pygame_gui.elements.ui_button.UIButton):
-            def on_hovered(self):
-                pass  # ไม่ทำอะไรเมื่อ hover
 
-            def on_unhovered(self):
-                pass  # ไม่ทำอะไรเมื่อออกจาก hover
 
+class NonHoverButton(pygame.elements.ui_button.UIButton):
+    def on_hovered(self):
+        pass  # ไม่ทำอะไรเมื่อ hover
+
+    def on_unhovered(self):
+        pass  # ไม่ทำอะไรเมื่อออกจาก hover

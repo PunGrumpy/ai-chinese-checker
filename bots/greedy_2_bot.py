@@ -14,7 +14,7 @@ class Greedy2BotPlayer(Player):
         """returns [start_coor, end_coor] in objective coordinates\n
         return [subj_to_obj_coor(start_coor, self.playerNum), subj_to_obj_coor(end_coor, self.playerNum)]
         """
-        moves = g.allMovesDict(self.playerNum,True)
+        moves = g.allMovesDict(self.playerNum, True)
         # state = g.boardState(self.playerNum)
         forwardMoves = dict()
         sidewaysMoves = dict()

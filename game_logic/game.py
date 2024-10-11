@@ -5,12 +5,18 @@ import pygame, copy
 
 
 class Game:
-    def __init__(self, playerCount,playerColor):
+    def __init__(self, playerCount, playerColor):
         self.width = 1920
         self.height = 1080
         self.playerCount = playerCount
         self.playerColor = playerColor
-        self.pieces: dict[int, set[Piece]] = {1: set(),2: set(),3: set(),4: set(),5: set(),6: set(),
+        self.pieces: dict[int, set[Piece]] = {
+            1: set(),
+            2: set(),
+            3: set(),
+            4: set(),
+            5: set(),
+            6: set(),
         }
         self.board = self.createBoard(playerCount)
         # for drawing board
@@ -129,7 +135,7 @@ class Game:
                 while i in moves:
                     moves.remove(i)
         return list(set(moves))
-    
+
     def getValidMovesWithZone(self, startPos: tuple, playerNum: int, playerCount: int):
         # 2 Player
         if playerCount == 2:
@@ -228,12 +234,15 @@ class Game:
         """
         moves = dict()
 
-
         for p in self.pieces[playerNum]:
             if withZone:
-                p_moves_list = self.getValidMovesWithZone(p.getCoor(), playerNum, self.playerCount)
+                p_moves_list = self.getValidMovesWithZone(
+                    p.getCoor(), playerNum, self.playerCount
+                )
             else:
-                p_moves_list = self.getValidMoves(p.getCoor(), playerNum, self.playerCount)
+                p_moves_list = self.getValidMoves(
+                    p.getCoor(), playerNum, self.playerCount
+                )
             if p_moves_list == []:
                 continue
             p_subj_coor = obj_to_subj_coor(p.getCoor(), playerNum, self.playerCount)
@@ -284,7 +293,7 @@ class Game:
 
                 pygame.draw.circle(
                     window,
-                    self.playerColor[self.board[obj_coor].getPlayerNum()-1],
+                    self.playerColor[self.board[obj_coor].getPlayerNum() - 1],
                     c,
                     self.circleRadius - 2,
                 )

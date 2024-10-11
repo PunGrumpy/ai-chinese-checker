@@ -38,8 +38,8 @@ class Player(ABC, metaclass=PlayerMeta):
 class HumanPlayer(Player):
     def __init__(self, playerCount: int):
         super().__init__(playerCount)
-        self.playerColor = (0,0,0)
-    
+        self.playerColor = (0, 0, 0)
+
     def getPlayerColor(self):
         return self.playerColor
 
@@ -158,7 +158,7 @@ class HumanPlayer(Player):
                         prev_selected_piece_coor != ()
                         and selected_piece_coor != prev_selected_piece_coor
                     ):
-                        g.drawBoard(window, self.playerCount,self.playerNum)
+                        g.drawBoard(window, self.playerCount, self.playerNum)
                     prev_selected_piece_coor = selected_piece_coor
                     # draw a semi-transparent gray circle outside the piece
                     pygame.draw.circle(
