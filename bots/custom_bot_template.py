@@ -4,8 +4,8 @@ from game_logic.helpers import add, mult
 
 
 class CustomBotTemplate(Player):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, playerCount: int):
+        super().__init__(playerCount)
 
     def pickMove(self, g: Game):
         moves = g.allMovesDict(self.playerNum)
@@ -28,6 +28,6 @@ class CustomBotTemplate(Player):
         the starting and ending subjective coordinates.
         """
         return [
-            subj_to_obj_coor(start, self.playerNum),
-            subj_to_obj_coor(end, self.playerNum),
+            subj_to_obj_coor(start, self.playerNum, self.playerCount),
+            subj_to_obj_coor(end, self.playerNum, self.playerCount),
         ]
