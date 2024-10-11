@@ -42,11 +42,11 @@ return [subj_to_obj_coor(start, self.playerNum), subj_to_obj_coor(end, self.play
 
 Here are some helpful functions from `game_logic.game` to assist in creating your bot’s logic:
 
-| 🛠️ Function           | 📊 Data Type                                | 📜 Description                                                                                                |
-| --------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `allMovesDict()`      | `dict(tuple(int,int):list(tuple(int,int)))` | Returns all valid moves for your pieces. Key: piece coordinate, Value: list of valid destination coordinates. |
-| `getBoardState()`     | `dict(tuple(int,int):int)`                  | Returns the board state. Key: coordinates, Value: player number or 0 (vacant).                                |
-| `getBoolBoardState()` | `dict(tuple(int,int):bool)`                 | Similar to `getBoardState()`, but with `True` (occupied) and `False` (vacant).                                |
+| 🛠️ Function           | 📊 Data Type                                      | 📜 Description                                                                                                |
+| --------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `allMovesDict()`      | `dict(tuple(int,int):list(tuple(int,int), bool))` | Returns all valid moves for your pieces. Key: piece coordinate, Value: list of valid destination coordinates. |
+| `getBoardState()`     | `dict(tuple(int,int):int)`                        | Returns the board state. Key: coordinates, Value: player number or 0 (vacant).                                |
+| `getBoolBoardState()` | `dict(tuple(int,int):bool)`                       | Similar to `getBoardState()`, but with `True` (occupied) and `False` (vacant).                                |
 
 Remember to convert the coordinates using `subj_to_obj_coor()` when returning a move, as shown in the template.
 

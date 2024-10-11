@@ -228,7 +228,7 @@ class Game:
             )
         return state
 
-    def allMovesDict(self, playerNum: int, withZone: bool):
+    def allMovesDict(self, playerNum: int, withZone: bool = False):
         """Returns a dict of all valid moves, in subjective coordinates.
         The key is the coordinates of a piece (`tuple`), and the value is a `list` of destination coordinates.
         """
