@@ -151,9 +151,9 @@ class Game:
                 else 3 if playerNum == 2 else 5 if playerNum == 3 else 6
             )
             end_zone = (
-                4
+                5
                 if playerNum == 1
-                else 5 if playerNum == 2 else 2 if playerNum == 3 else 3
+                else 6 if playerNum == 2 else 2 if playerNum == 3 else 3
             )
         elif playerCount == 6:
             start_zone = playerNum
@@ -192,14 +192,14 @@ class Game:
             end_zone = 4 if playerNum == 1 else 6 if playerNum == 2 else 2
         elif playerCount == 4:
             end_zone = (
-                4
+                5
                 if playerNum == 1
-                else 5 if playerNum == 2 else 2 if playerNum == 3 else 3
+                else 6 if playerNum == 2 else 2 if playerNum == 3 else 3
             )
         elif playerCount == 6:
             end_zone = (playerNum + 3) % 6
             end_zone = end_zone if end_zone != 0 else 6
-
+            
         for i in ZONE_COOR[end_zone]:
             if self.board[i] == None:
                 return False
