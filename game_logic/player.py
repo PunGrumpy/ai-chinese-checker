@@ -8,6 +8,7 @@ from pygame.locals import *
 import sys
 from abc import ABC, ABCMeta, abstractmethod
 import math
+from lib.utils import resource_path
 
 
 class PlayerMeta(ABCMeta):
@@ -81,9 +82,11 @@ class HumanPlayer(Player):
                 )
 
             button_image = pygame.image.load(
-                "images/normal_home.png"
-                if not mouse_hover_home
-                else "images/hover_home.png"
+                resource_path(
+                    "images/normal_home.png"
+                    if not mouse_hover_home
+                    else "images/hover_home.png"
+                )
             ).convert_alpha()
             button_image = pygame.transform.scale(button_image, (100, 100))
             tutorial_button_rect = button_image.get_rect()

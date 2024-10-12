@@ -9,6 +9,7 @@ from pygame_gui.windows import UIColourPickerDialog
 from PySide6 import QtWidgets
 from bots import *
 import time
+from lib.utils import resource_path
 
 
 class LoopController:
@@ -19,7 +20,7 @@ class LoopController:
         self.replayRecord = list()
         self.playerTypes = {}
         self.filePath = ""
-        self.font_path = "font/ZCOOLKuaiLe-Regular.ttf"
+        self.font_path = resource_path("font/ZCOOLKuaiLe-Regular.ttf")
         self.width = 1920
         self.height = 1080
         # key: class name strings
@@ -137,9 +138,9 @@ class LoopController:
             )
 
             home_image = pygame.image.load(
-                "images/normal_home.png"
+                resource_path("images/normal_home.png")
                 if not mouse_hover_home
-                else "images/hover_home.png"
+                else resource_path("images/hover_home.png")
             ).convert_alpha()
             home_image = pygame.transform.scale(home_image, (100, 100))
             home_button_rect = home_image.get_rect()
@@ -315,7 +316,9 @@ class LoopController:
         mouse_hover_tutorial = False
 
         ui_manager = pygame_gui.UIManager((1920, 1080))
-        colour_image = pygame.image.load("images/logo_color.png").convert_alpha()
+        colour_image = pygame.image.load(
+            resource_path("images/logo_color.png")
+        ).convert_alpha()
         colour_image = pygame.transform.scale(colour_image, (50, 50))
 
         # สร้างปุ่มที่ไม่ทำการ hover
@@ -375,9 +378,9 @@ class LoopController:
 
             # วาดรูปภาพปุ่ม Tutorial
             button_image = pygame.image.load(
-                "images/Tutorial_On_Hover.png"
+                resource_path("images/Tutorial_On_Hover.png")
                 if mouse_hover_tutorial
-                else "images/Tutorial_Un_Hover.png"
+                else resource_path("images/Tutorial_Un_Hover.png")
             ).convert_alpha()
             tutorial_button_rect = button_image.get_rect()
             tutorial_button_rect.topleft = (1800, 10)  # กำหนดตำแหน่งที่ต้องการ
@@ -1242,7 +1245,7 @@ class LoopController:
             )
 
             image = pygame.image.load(
-                "images/Tutorial_page_" + str(selected_page) + ".png"
+                resource_path("images/Tutorial_page_" + str(selected_page) + ".png")
             )
             image = pygame.transform.scale(image, (1400, 800))
             window.blit(image, (260, 120))
