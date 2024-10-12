@@ -12,7 +12,7 @@ class GreedyNormalBot(Player):
 
     def pickMove(self, g: Game):
         """returns [start_coor, end_coor] in objective coordinates"""
-        moves = g.allMovesDict(self.playerNum,True)
+        moves = g.allMovesDict(self.playerNum, True)
         # state = g.boardState(self.playerNum)
         forwardMoves = dict()
         sidewaysMoves = dict()

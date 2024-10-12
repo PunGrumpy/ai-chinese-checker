@@ -46,7 +46,7 @@ class GreedyHardBot(Player):
         for coor in list(backwardMoves):
             if backwardMoves[coor] == []:
                 del backwardMoves[coor]
-                
+
         # if forward is empty, move sideways
         if len(forwardMoves) == 0:
             if len(sidewaysMoves) == 0:

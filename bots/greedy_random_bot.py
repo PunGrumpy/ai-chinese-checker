@@ -10,7 +10,7 @@ class GreedyEasyBot(Player):
 
     def pickMove(self, g: Game):
         """returns [start_coor, end_coor]"""
-        moves = g.allMovesDict(self.playerNum,True)
+        moves = g.allMovesDict(self.playerNum, True)
         tempMoves = dict()
         # forward
         for coor in moves:
@@ -45,7 +45,7 @@ class GreedyEasyBot(Player):
                 coor = random.choice(list(tempMoves))
                 move = random.choice(tempMoves[coor])
             else:
-            # backways
+                # backways
                 tempMoves.clear()
                 for coor in moves:
                     if moves[coor] != []:

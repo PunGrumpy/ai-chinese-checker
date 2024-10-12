@@ -199,7 +199,7 @@ class Game:
         elif playerCount == 6:
             end_zone = (playerNum + 3) % 6
             end_zone = end_zone if end_zone != 0 else 6
-            
+
         for i in ZONE_COOR[end_zone]:
             if self.board[i] == None:
                 return False
