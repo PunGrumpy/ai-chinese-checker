@@ -1,14 +1,19 @@
 import time
 from game_logic.player import Player
 from game_logic.game import Game
-from game_logic.helpers import subj_to_obj_coor, obj_to_subj_coor, distance
+from game_logic.helpers import (
+    get_player_zone,
+    subj_to_obj_coor,
+    obj_to_subj_coor,
+    distance,
+)
 from game_logic.literals import ZONE_COOR
 import math
 import random
 
 
 class MinimaxBotPlayer(Player):
-    def __init__(self, playerCount: int, max_depth: int = 4, max_time: float = 3.0):
+    def __init__(self, playerCount: int, max_depth: int = 6, max_time: float = 4.0):
         super().__init__(playerCount)
         self.max_depth = max_depth
         self.max_time = max_time
@@ -57,7 +62,7 @@ class MinimaxBotPlayer(Player):
         return [move[:2] for move in sorted(moves, key=lambda x: x[2], reverse=True)]
 
     def quick_evaluate_move(self, g: Game, start, end):
-        end_zone = (self.playerNum + 3) % 6
+        end_zone = (get_player_zone(self.playerNum, self.playerCount) + 4) % 6
         end_zone = end_zone if end_zone != 0 else 6
         score = distance(start, end)
         if end in ZONE_COOR[end_zone]:
@@ -119,7 +124,7 @@ class MinimaxBotPlayer(Player):
 
     def evaluate(self, g: Game, player_num: int):
         score = 0
-        end_zone = (player_num + 3) % 6
+        end_zone = (get_player_zone(self.playerNum, self.playerCount) + 4) % 6
         end_zone = end_zone if end_zone != 0 else 6
 
         pieces_in_end_zone = 0
