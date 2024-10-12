@@ -4,7 +4,7 @@ from game_logic.player import Player
 from game_logic.game import *
 
 
-class Greedy2BotPlayer(Player):
+class GreedyHardBot(Player):
     """Always finds a move that jumps through the maximum distance (dest[1] - coor[1])"""
 
     def __init__(self, playerCount: int):
@@ -18,6 +18,7 @@ class Greedy2BotPlayer(Player):
         # state = g.boardState(self.playerNum)
         forwardMoves = dict()
         sidewaysMoves = dict()
+        backwardMoves = dict()
         start_coor = ()
         end_coor = ()
         max_dist = 0
@@ -26,6 +27,7 @@ class Greedy2BotPlayer(Player):
             if moves[coor] != []:
                 forwardMoves[coor] = []
                 sidewaysMoves[coor] = []
+                backwardMoves[coor] = []
             else:
                 continue
             for dest in moves[coor]:
@@ -33,20 +35,26 @@ class Greedy2BotPlayer(Player):
                     forwardMoves[coor].append(dest)
                 if dest[1] == coor[1]:
                     sidewaysMoves[coor].append(dest)
+                else:
+                    backwardMoves[coor].append(dest)
         for coor in list(forwardMoves):
             if forwardMoves[coor] == []:
                 del forwardMoves[coor]
         for coor in list(sidewaysMoves):
             if sidewaysMoves[coor] == []:
                 del sidewaysMoves[coor]
+        for coor in list(backwardMoves):
+            if backwardMoves[coor] == []:
+                del backwardMoves[coor]
+                
         # if forward is empty, move sideways
         if len(forwardMoves) == 0:
-            start_coor = random.choice(list(sidewaysMoves))
-            end_coor = random.choice(sidewaysMoves[start_coor])
-            return [
-                subj_to_obj_coor(start_coor, self.playerNum, self.playerCount),
-                subj_to_obj_coor(end_coor, self.playerNum, self.playerCount),
-            ]
+            if len(sidewaysMoves) == 0:
+                start_coor = random.choice(list(backwardMoves))
+                end_coor = random.choice(backwardMoves[start_coor])
+            else:
+                start_coor = random.choice(list(sidewaysMoves))
+                end_coor = random.choice(sidewaysMoves[start_coor])
         # forward: max distance
         for coor in forwardMoves:
             for dest in forwardMoves[coor]:

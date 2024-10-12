@@ -12,7 +12,7 @@ import math
 import random
 
 
-class MinimaxBotPlayer(Player):
+class MinimaxBot(Player):
     def __init__(self, playerCount: int, max_depth: int = 6, max_time: float = 4.0):
         super().__init__(playerCount)
         self.max_depth = max_depth
