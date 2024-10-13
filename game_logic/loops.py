@@ -1300,10 +1300,10 @@ class LoopController:
 
                     # ตรวจสอบการคลิกปุ่ม tutorial
                     if left_arrow_rect.collidepoint(mouse_pos):
-                        selected_page -= 1 if selected_page > 1 else -4
+                        selected_page -= 1 if selected_page > 1 else -5
 
                     if right_arrow_rect.collidepoint(mouse_pos):
-                        selected_page += 1 if selected_page < 5 else -4
+                        selected_page += 1 if selected_page < 6 else -5
 
             pygame.display.update()
 
