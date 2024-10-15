@@ -2,6 +2,23 @@
 
 ![Preview](./images/preview.png)
 
+## 🏓 Table of Contents
+
+- [🔗 Presentation](#-presentation)
+- [🤔 What is Chinese Checkers?](#-what-is-chinese-checkers)
+- [🎮 How to Play](#-how-to-play)
+  - [📚 Rules](#-rules)
+- [🤖 AI Features](#-ai-features)
+- [🚀 Technologies](#️-technologies)
+- [🛠️ Setup and Installation](#️-setup-and-installation)
+- [📝 License](#-license)
+- [💖 Thanks for owner of this project](#-thanks-for-owner-of-this-project)
+- [💕 Contributors](#-contributors)
+
+## 🔗 Presentation
+
+[Canva Presentation Click Here 👆](https://www.canva.com/design/DAGTKP0zSgY/pxgsmrTI43hyLHRegx7mhQ/edit?utm_content=DAGTKP0zSgY&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+
 ## 🤔 What is Chinese Checkers?
 
 **Chinese Checkers** is a strategy board game originating from Germany, known as "**Sternhalma**". It can be played by two, three, four, or six players, either individually or in teams. The game is a modern and simplified variation of the game **Halma**.
