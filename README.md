@@ -46,7 +46,7 @@ The game ends when a player successfully moves all of their pieces to the opposi
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/chinese-checkers.git
+   git clone https://github.com/PunGrumpy/chinese-checkers.git
    cd chinese-checkers
    ```
 2. Create and activate a virtual environment:
