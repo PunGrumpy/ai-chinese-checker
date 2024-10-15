@@ -26,16 +26,15 @@ The game ends when a player successfully moves all of their pieces to the opposi
 
 [Find our AI algorithms here](./bots)
 
-| Name                           | Description                                           | Emotion |
-| ------------------------------ | ----------------------------------------------------- | ------- |
-| **Random AI**                  | Moves a random piece to a random adjacent space.      | 🎲      |
-| **Greedy Random AI**           | Moves a random piece to the best adjacent space.      | 🎲🤑    |
-| **Greedy 1st AI**              | Always moves the topmost piece to the best space.     | 🤑      |
-| **Greedy 2nd AI**              | Always moves and jumps throught the maximum distance. | 🤑🤑    |
-| **Minimax with AB Pruning AI** | Uses Minimax algorithm with Alpha-Beta Pruning.       | 🧠      |
+| Name                  | Description                                           | Emotion |
+| --------------------- | ----------------------------------------------------- | ------- |
+| **Greedy Easy Bot**   | Moves a random piece to the best adjacent space.      | 🎲🤑    |
+| **Greedy Normal Bot** | Always moves the topmost piece to the best space.     | 🤑      |
+| **Greedy Hard Bot**   | Always moves and jumps throught the maximum distance. | 🤑🤑    |
+| **Minimax Bot**       | Uses Minimax algorithm with Alpha-Beta Pruning.       | 🧠      |
 
 > [!WARNING]
-> The Minimax with AB Pruning AI is not recommended for 3 or more players because it worst performance.
+> The **Minimax Bot** is not recommended for 3 or more players because it worst performance.
 
 ## 🚀 Technologies
 
