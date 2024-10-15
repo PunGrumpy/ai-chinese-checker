@@ -11,6 +11,7 @@
 - [🤖 AI Features](#-ai-features)
 - [🚀 Technologies](#️-technologies)
 - [🛠️ Setup and Installation](#️-setup-and-installation)
+- [📩 How to Download Executable File](#-how-to-download-executable-file)
 - [📝 License](#-license)
 - [💖 Thanks for owner of this project](#-thanks-for-owner-of-this-project)
 - [💕 Contributors](#-contributors)
@@ -81,6 +82,14 @@ The game ends when a player successfully moves all of their pieces to the opposi
    ```bash
    python main.py
    ```
+
+## 📩 How to Download Executable File
+
+1. Go to [Releases](https://github.com/PunGrumpy/ai-chinese-checker/releases) page
+2. Download the Assets file
+3. Select executable file (only for Windows OS)
+
+[Click here to download the executable file](https://github.com/PunGrumpy/ai-chinese-checker/releases/download/v1.1.0/Chinese-Checkers-with-AI.exe)
 
 ## 📝 License
 
